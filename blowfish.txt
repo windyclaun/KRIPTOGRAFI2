@@ -1,0 +1,52 @@
+from Crypto.Cipher import Blowfish
+from Crypto.Util.Padding import pad, unpad
+import os
+
+# Fungsi untuk enkripsi file menggunakan Blowfish
+def encrypt_file(file_path, key):
+    cipher = Blowfish.new(key, Blowfish.MODE_CBC)
+    iv = cipher.iv
+    
+    with open(file_path, 'rb') as f:
+        plaintext = f.read()
+    
+    # Padding untuk memastikan ukuran blok sesuai dengan Blowfish (8 byte)
+    padded_data = pad(plaintext, Blowfish.block_size)
+    ciphertext = cipher.encrypt(padded_data)
+    
+    # Simpan ciphertext dan IV ke file baru
+    encrypted_file_path = file_path + '.enc'
+    with open(encrypted_file_path, 'wb') as f:
+        f.write(iv + ciphertext)
+    
+    print(f"File terenkripsi berhasil disimpan: {encrypted_file_path}")
+    return encrypted_file_path
+
+# Fungsi untuk dekripsi file menggunakan Blowfish
+def decrypt_file(encrypted_file_path, key):
+    with open(encrypted_file_path, 'rb') as f:
+        iv = f.read(Blowfish.block_size)
+        ciphertext = f.read()
+    
+    cipher = Blowfish.new(key, Blowfish.MODE_CBC, iv)
+    decrypted_data = unpad(cipher.decrypt(ciphertext), Blowfish.block_size)
+    
+    # Simpan file yang sudah didekripsi
+    decrypted_file_path = encrypted_file_path.replace('.enc', '.dec')
+    with open(decrypted_file_path, 'wb') as f:
+        f.write(decrypted_data)
+    
+    print(f"File berhasil didekripsi: {decrypted_file_path}")
+    return decrypted_file_path
+
+# Input kunci (harus antara 4 hingga 56 byte)
+key = b'mysecretkey1234'  # Panjang kunci harus sesuai (antara 4 hingga 56 karakter)
+
+# Nama file yang ingin dienkripsi
+file_to_encrypt = 'example.txt'
+
+# Enkripsi file
+encrypted_file = encrypt_file(file_to_encrypt, key)
+
+# Dekripsi file
+decrypt_file(encrypted_file, key)
