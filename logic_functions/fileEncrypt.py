@@ -1,55 +1,61 @@
-import binascii
+from Crypto.Cipher import Blowfish
+from Crypto.Util.Padding import pad, unpad
+import os
 
-def encrypt_file(input_file, output_file, key):
-    with open(input_file, 'rb') as f:
-        plaintext = f.read()
+from Crypto.Cipher import Blowfish
+from Crypto.Util.Padding import pad, unpad
+import os
+
+def encrypt_file(file, key):
+    if isinstance(key, str):
+        key = key.encode('utf-8')
     
-    # Pad agar panjangnya kelipatan 16 byte
-    padded_plaintext = plaintext + b' ' * (16 - len(plaintext) % 16)
-
-    T = Twofish(key)
-    ciphertext = b''
-
-    # Enkripsi blok-blok 16 byte
-    for i in range(0, len(padded_plaintext), 16):
-        block = padded_plaintext[i:i+16]
-        ciphertext += T.encrypt(block)
-
-    with open(output_file, 'wb') as f:
-        f.write(ciphertext)
-    print(f"File terenkripsi disimpan sebagai: {output_file}")
-
-def decrypt_file(input_file, output_file, key):
-    with open(input_file, 'rb') as f:
-        ciphertext = f.read()
+    cipher = Blowfish.new(key, Blowfish.MODE_CBC)
+    iv = cipher.iv
     
-    T = Twofish(key)
-    plaintext = b''
-
-    # Dekripsi blok-blok 16 byte
-    for i in range(0, len(ciphertext), 16):
-        block = ciphertext[i:i+16]
-        plaintext += T.decrypt(block)
+    # Membaca konten dari file yang diunggah
+    plaintext = file.read()
     
-    # Hapus padding yang ditambahkan saat enkripsi
-    plaintext = plaintext.rstrip(b' ')
+    # Padding untuk memastikan ukuran blok sesuai dengan Blowfish (8 byte)
+    padded_data = pad(plaintext, Blowfish.block_size)
+    ciphertext = cipher.encrypt(padded_data)
+    
+    # Mendapatkan ekstensi file asli
+    original_filename = file.name
+    original_extension = original_filename.split('.')[-1]
+    encrypted_filename = f"{original_filename.rsplit('.', 1)[0]}_{original_extension}_encrypted.bin"
+    
+    # Menulis data terenkripsi ke file output dalam format biner
+    with open(encrypted_filename, 'wb') as out_file:
+        out_file.write(iv + ciphertext)
 
-    with open(output_file, 'wb') as f:
-        f.write(plaintext)
-    print(f"File didekripsi disimpan sebagai: {output_file}")
+    return encrypted_filename  # Mengembalikan path file terenkripsi
 
+def decrypt_file(file, key):
+    if isinstance(key, str):
+        key = key.encode('utf-8')
 
-if __name__ == "__main__":
-    # Kunci harus sepanjang 16, 24, atau 32 byte
-    key = b'IniKunciRahasia1234'  # Panjang kunci = 16 byte (128-bit)
+    # Membaca konten dari file yang diunggah
+    file_content = file.read()
+    
+    # Ekstrak IV dan ciphertext dari file terenkripsi
+    iv = file_content[:Blowfish.block_size]
+    ciphertext = file_content[Blowfish.block_size:]
 
-    # Nama file input dan output
-    input_file = 'file_input.txt'
-    encrypted_file = 'file_terenkripsi.bin'
-    decrypted_file = 'file_didekripsi.txt'
+    # Inisialisasi cipher dengan Blowfish
+    cipher = Blowfish.new(key, Blowfish.MODE_CBC, iv)
+    
+    # Dekripsi data dan hilangkan padding
+    decrypted_data = unpad(cipher.decrypt(ciphertext), Blowfish.block_size)
+    
+    # Mendapatkan nama file asli dan ekstensi dari nama file terenkripsi
+    original_filename = file.name
+    # Ekstrak ekstensi asli dari file terenkripsi
+    original_extension = original_filename.split('_')[-2]
+    decrypted_filename = f"{original_filename.rsplit('_', 2)[0]}.{original_extension}"
+    
+    # Menulis data yang terdekripsi ke file output dengan ekstensi asli
+    with open(decrypted_filename, 'wb') as out_file:
+        out_file.write(decrypted_data)
 
-    # Enkripsi file
-    encrypt_file(input_file, encrypted_file, key)
-
-    # Dekripsi file
-    decrypt_file(encrypted_file, decrypted_file, key)
+    return decrypted_filename  # Mengembalikan path file yang telah didekripsi

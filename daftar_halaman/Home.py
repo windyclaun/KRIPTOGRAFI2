@@ -61,38 +61,45 @@ def menu(page):
         
     elif page == "File":
         st.title("File Encryption and Decryption")
-        st.header("File Encryption using Twofish")
+        st.header("File Encryption using Blowfish")
         option = st.radio("Choose an option", ("Encrypt", "Decrypt"))
         if option == "Encrypt":
-            input_file = st.file_uploader("Upload a file to encrypt", type=["txt", "pdf", "docx"])
-            if input_file:
-                output_file = "encrypted_file.bin"
-                key = get_random_bytes(16)
-                if st.button("Encrypt"):
-                    fileC.encrypt_file(input_file, output_file, key)
-                    st.write(f"File '{input_file.name}' successfully encrypted to '{output_file}'")
-                    with open(output_file, "rb") as file:
-                        st.download_button(
-                            label="Download encrypted file",
-                            data=file,
-                            file_name="encrypted_file.bin",
-                            mime="application/octet-stream"
-                        )
-        
+                input_file = st.file_uploader("Upload a file to encrypt", type=["txt", "pdf", "docx"])
+                key = st.text_input("Enter key (4-56 bytes)")
+                
+                if input_file:
+                    if st.button("Encrypt"):
+                        if len(key) < 4 or len(key) > 56:
+                            st.warning("Key must be between 4 and 56 bytes")
+                        else:
+                            encrypted_file_path = fileC.encrypt_file(input_file, key)
+                            st.success(f"File '{input_file.name}' successfully encrypted to '{encrypted_file_path}'")
+                            with open(encrypted_file_path, "rb") as file:
+                                st.download_button(
+                                    label="Download encrypted file",
+                                    data=file,
+                                    file_name=encrypted_file_path.split("/")[-1],
+                                    mime="application/octet-stream"
+                                )
+
         elif option == "Decrypt":
             input_file = st.file_uploader("Upload a file to decrypt", type=["bin"])
+            key = st.text_input("Enter key (4-56 bytes)")
+            
             if input_file:
-                output_file = "decrypted_file.txt"
-                key = get_random_bytes(16)
                 if st.button("Decrypt"):
-                    fileC.decrypt_file(input_file, output_file, key)
-                    st.write(f"File '{input_file.name}' successfully decrypted to '{output_file}'")
-                    with open(output_file, "rb") as file:
-                        st.download_button(
-                            label="Download decrypted file",
-                            data=file,
-                            file_name="decrypted_file.txt",
-                            mime="application/octet-stream"
-                        )
+                    if len(key) < 4 or len(key) > 56:
+                        st.warning("Key must be between 4 and 56 bytes")
+                    else:
+                        decrypted_file_path = fileC.decrypt_file(input_file, key)
+                        st.success(f"File '{input_file.name}' successfully decrypted to '{decrypted_file_path}'")
+                        with open(decrypted_file_path, "rb") as file:
+                            st.download_button(
+                                label="Download decrypted file",
+                                data=file,
+                                file_name=decrypted_file_path.split("/")[-1],
+                                mime="application/octet-stream"
+                            )
+
     else:
         st.write("404 Not Found")
