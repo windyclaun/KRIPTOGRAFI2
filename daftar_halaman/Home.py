@@ -1,6 +1,7 @@
 import streamlit as st
 from logic_functions.superEncrypt import super_encrypt, super_decrypt
 from logic_functions import rsa_c as rsa
+from logic_functions import steganografi
 
 
 def menu(page):
@@ -28,7 +29,33 @@ def menu(page):
                 st.write("Decrypted Text:", str(decrypted_text))
                 
     elif page == "Steganography":
-        st.write("Steganography")
+        st.title("Steganography")
+        st.header("Hide text in an image")
+        option = st.radio("Choose an option", ("Encode", "Decode"))
+        
+        if option == "Encode":
+            image_file = st.file_uploader("Upload an image", type=["jpg", "png", "jpeg"])
+            text = st.text_area("Enter text to hide")
+            if st.button("Encode"):
+                if not image_file or not text:
+                    st.warning("Please upload an image and enter text to hide")
+                    return
+                output_image_path = 'stenography.png'
+                hidden_image = steganografi.embed_msg(image_file, output_image_path, text)
+                st.write("Image saved to", hidden_image)
+                with open(output_image_path, "rb") as file:
+                    st.download_button(
+                        label="Download encoded image",
+                        data=file,
+                        file_name="stenography.png",
+                        mime="image/png"
+                    )
+        elif option == "Decode":
+            image = st.file_uploader("Upload an image", type=["jpg", "png", "jpeg"])
+            if st.button("Decode"):
+                decoded_text = steganografi.extract_msg(image)
+                st.write("Decoded Text:", decoded_text)
+        
     elif page == "File":
         st.write("File")    
     else:
