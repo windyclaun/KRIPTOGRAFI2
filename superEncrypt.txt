@@ -1,0 +1,38 @@
+from vigenere_algorithm import vigenere_encrypt, vigenere_decrypt
+from rsa_algorithm import rsa_encrypt, rsa_decrypt, rsa_generate_keys
+
+def super_encrypt(plain_text, vigenere_key, public_key):
+    # Langkah 1: Enkripsi menggunakan Vigenere
+    vigenere_encrypted = vigenere_encrypt(plain_text, vigenere_key)
+    
+    # Langkah 2: Enkripsi menggunakan RSA
+    rsa_encrypted = rsa_encrypt(vigenere_encrypted, public_key)
+    
+    return rsa_encrypted
+
+def super_decrypt(encrypted_text, vigenere_key, private_key):
+    # Langkah 1: Dekripsi menggunakan RSA
+    rsa_decrypted = rsa_decrypt(encrypted_text, private_key)
+    
+    # Langkah 2: Dekripsi menggunakan Vigenere
+    vigenere_decrypted = vigenere_decrypt(rsa_decrypted, vigenere_key)
+    
+    return vigenere_decrypted
+
+
+# Contoh Penggunaan
+if __name__ == "__main__":
+    # Generate RSA keys
+    public_key, private_key = rsa_generate_keys()
+    
+    # Input data
+    text = "HELLO WORLD"
+    vigenere_key = "KEY"
+    
+    # Enkripsi
+    encrypted = super_encrypt(text, vigenere_key, public_key)
+    print("Encrypted Text:", encrypted)
+    
+    # Dekripsi
+    decrypted = super_decrypt(encrypted, vigenere_key, private_key)
+    print("Decrypted Text:", decrypted)
