@@ -26,12 +26,22 @@ def rsa_generate_keys():
 
 def rsa_encrypt(message, key):
     e, n = key
+    # Enkripsi setiap karakter menjadi angka menggunakan RSA
     encrypted = [pow(ord(char), e, n) for char in message]
     return encrypted
 
 def rsa_decrypt(encrypted, key):
     d, n = key
-    decrypted = ''.join(chr(pow(char, d, n)) for char in encrypted)
+    # Jika input berupa string, ubah menjadi list menggunakan split()
+    if isinstance(encrypted, str):
+        encrypted_list = encrypted.split()
+    else:
+        # Jika input sudah berupa list, langsung gunakan
+        encrypted_list = encrypted
+    
+    
+    # Dekripsi setiap angka kembali menjadi karakter
+    decrypted = ''.join(chr(pow(int(char), d, n)) for char in encrypted_list)
     return decrypted
 
 # Contoh Penggunaan

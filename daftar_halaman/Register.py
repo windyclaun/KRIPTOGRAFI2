@@ -1,5 +1,6 @@
 import streamlit as st
 import connect as conn
+import hashlib
 
 
 def register():
@@ -16,10 +17,14 @@ def register():
             return
 
         query = conn.run_query("SELECT * FROM users WHERE username = '" + username + "';", fetch=True)
+        st.write(query)
         if query is not None and not query.empty:
-            conn.run_query("INSERT INTO users (username, password) VALUES (%s, %s);", (username, password), fetch=False)
-            st.success("Registration successful.")
-            
-        else:
             st.error("Username already exists.")
+        else:
+            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+            password = hashed_password
+            st.write(password)
+            conn.run_query("INSERT INTO users (username, password) VALUES (%s, %s);", (username, password), fetch=False)
+            st.success("Registration successful. Kamu bisa login sekarang.")
+           
             return

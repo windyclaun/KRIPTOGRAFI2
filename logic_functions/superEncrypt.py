@@ -1,5 +1,6 @@
-from vigenere_algorithm import vigenere_encrypt, vigenere_decrypt
-from rsa_algorithm import rsa_encrypt, rsa_decrypt, rsa_generate_keys
+from logic_functions.vigenere_c import vigenere_encrypt, vigenere_decrypt
+from logic_functions.rsa_c import rsa_encrypt, rsa_decrypt, rsa_generate_keys
+import connect as conn
 
 def super_encrypt(plain_text, vigenere_key, public_key):
     # Langkah 1: Enkripsi menggunakan Vigenere
@@ -7,8 +8,12 @@ def super_encrypt(plain_text, vigenere_key, public_key):
     
     # Langkah 2: Enkripsi menggunakan RSA
     rsa_encrypted = rsa_encrypt(vigenere_encrypted, public_key)
+    rsa_encrypted_text = ' '.join(map(str, rsa_encrypted))
     
-    return rsa_encrypted
+    query = "INSERT INTO pesan (plain_text, vigenere_key, rsa) VALUES (%s, %s, %s)"
+    params = (plain_text, vigenere_key, rsa_encrypted_text)
+    conn.run_query(query, params, fetch=False)
+    return rsa_encrypted_text
 
 def super_decrypt(encrypted_text, vigenere_key, private_key):
     # Langkah 1: Dekripsi menggunakan RSA
