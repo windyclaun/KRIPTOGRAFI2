@@ -29,12 +29,12 @@ def vigenere_decrypt(ciphertext, key):
 
 
 # Contoh Penggunaan
-if __name__ == "__main__":
-    text = "HelloWorld"
-    key = "KEY"
+# if __name__ == "__main__":
+#     text = "HelloWorld"
+#     key = "KEY"
     
-    encrypted = vigenere_encrypt(text, key)
-    print("Encrypted:", encrypted)
+#     encrypted = vigenere_encrypt(text, key)
+#     print("Encrypted:", encrypted)
     
-    decrypted = vigenere_decrypt(encrypted, key)
-    print("Decrypted:", decrypted)
+#     decrypted = vigenere_decrypt(encrypted, key)
+#     print("Decrypted:", decrypted)

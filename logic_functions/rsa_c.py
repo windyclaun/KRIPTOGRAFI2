@@ -45,14 +45,14 @@ def rsa_decrypt(encrypted, key):
     return decrypted
 
 # Contoh Penggunaan
-if __name__ == "__main__":
-    public_key, private_key = rsa_generate_keys()
+# if __name__ == "__main__":
+#     public_key, private_key = rsa_generate_keys()
     
-    message = "HELLO"
-    print("Original Message:", message)
+#     message = "HELLO"
+#     print("Original Message:", message)
     
-    encrypted_message = rsa_encrypt(message, public_key)
-    print("Encrypted Message:", encrypted_message)
+#     encrypted_message = rsa_encrypt(message, public_key)
+#     print("Encrypted Message:", encrypted_message)
     
-    decrypted_message = rsa_decrypt(encrypted_message, private_key)
-    print("Decrypted Message:", decrypted_message)
+#     decrypted_message = rsa_decrypt(encrypted_message, private_key)
+#     print("Decrypted Message:", decrypted_message)
