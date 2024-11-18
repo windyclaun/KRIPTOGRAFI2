@@ -1,10 +1,5 @@
 from Crypto.Cipher import Blowfish
 from Crypto.Util.Padding import pad, unpad
-import os
-
-from Crypto.Cipher import Blowfish
-from Crypto.Util.Padding import pad, unpad
-import os
 
 def encrypt_file(file, key):
     if isinstance(key, str):
