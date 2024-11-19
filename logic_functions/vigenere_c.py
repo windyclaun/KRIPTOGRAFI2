@@ -3,7 +3,6 @@ def vigenere_encrypt(plaintext, key):
     key = key.upper()
     key_length = len(key)
     key_index = 0
-
     for char in plaintext:
         if char.isalpha():
             offset = ord('A') if char.isupper() else ord('a')
@@ -12,13 +11,11 @@ def vigenere_encrypt(plaintext, key):
         ciphertext += char
     return ciphertext
 
-
 def vigenere_decrypt(ciphertext, key):
     plaintext = ''
     key = key.upper()
     key_length = len(key)
     key_index = 0
-
     for char in ciphertext:
         if char.isalpha():
             offset = ord('A') if char.isupper() else ord('a')
@@ -26,15 +23,3 @@ def vigenere_decrypt(ciphertext, key):
             key_index = (key_index + 1) % key_length
         plaintext += char
     return plaintext
-
-
-# Contoh Penggunaan
-# if __name__ == "__main__":
-#     text = "HelloWorld"
-#     key = "KEY"
-    
-#     encrypted = vigenere_encrypt(text, key)
-#     print("Encrypted:", encrypted)
-    
-#     decrypted = vigenere_decrypt(encrypted, key)
-#     print("Decrypted:", decrypted)

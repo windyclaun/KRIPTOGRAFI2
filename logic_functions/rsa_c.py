@@ -39,20 +39,6 @@ def rsa_decrypt(encrypted, key):
         # Jika input sudah berupa list, langsung gunakan
         encrypted_list = encrypted
     
-    
     # Dekripsi setiap angka kembali menjadi karakter
     decrypted = ''.join(chr(pow(int(char), d, n)) for char in encrypted_list)
     return decrypted
-
-# Contoh Penggunaan
-# if __name__ == "__main__":
-#     public_key, private_key = rsa_generate_keys()
-    
-#     message = "HELLO"
-#     print("Original Message:", message)
-    
-#     encrypted_message = rsa_encrypt(message, public_key)
-#     print("Encrypted Message:", encrypted_message)
-    
-#     decrypted_message = rsa_decrypt(encrypted_message, private_key)
-#     print("Decrypted Message:", decrypted_message)

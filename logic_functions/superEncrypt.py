@@ -24,20 +24,3 @@ def super_decrypt(encrypted_text, vigenere_key, private_key):
     
     return vigenere_decrypted
 
-
-# Contoh Penggunaan
-# if __name__ == "__main__":
-#     # Generate RSA keys
-#     public_key, private_key = rsa_generate_keys()
-    
-#     # Input data
-#     text = "HELLO WORLD"
-#     vigenere_key = "KEY"
-    
-#     # Enkripsi
-#     encrypted = super_encrypt(text, vigenere_key, public_key)
-#     print("Encrypted Text:", encrypted)
-    
-#     # Dekripsi
-#     decrypted = super_decrypt(encrypted, vigenere_key, private_key)
-#     print("Decrypted Text:", decrypted)
