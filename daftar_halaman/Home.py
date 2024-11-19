@@ -17,7 +17,7 @@ def menu(page):
             if st.button("Encrypt"):
                 public_key, private_key = rsa.rsa_generate_keys()
                 encrypted_text = super_encrypt(text_to_encrypt, vegenere_key, public_key)
-                st.write(f":red[Encrypted Text: {encrypted_text}]")
+                st.write(f":red[Encrypted Text:]")
                 st.write(encrypted_text)
         
         elif option == "Decrypt":
