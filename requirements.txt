@@ -1,0 +1,8 @@
+streamlit
+mysql-connector-python 
+sqlalchemy
+cryptography
+pandas 
+pycryptodome 
+setuptools
+psycopg2-binary
