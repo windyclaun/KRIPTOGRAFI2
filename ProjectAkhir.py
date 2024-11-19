@@ -5,6 +5,8 @@ if 'sudah_login' not in st.session_state:
     st.session_state['sudah_login'] = False
 
 if st.session_state['sudah_login']:
+    st.sidebar.image("logo.png", use_container_width=True)
+    st.sidebar.title("CatEyeProctor")
     st.sidebar.title("Menu")
     username = st.session_state['username']
     st.sidebar.success(f"Hai, {username}")
@@ -16,7 +18,8 @@ if st.session_state['sudah_login']:
    
 else:
     with st.sidebar:
-        st.sidebar.title("Navigation")
+        st.sidebar.image("logo.png", use_container_width=True)
+        st.sidebar.title("CatEyeProctor")
         st.sidebar.warning("Not logged in")
         page = st.sidebar.radio("Select Page", ["Login", "Register"])
     if page == "Login":
