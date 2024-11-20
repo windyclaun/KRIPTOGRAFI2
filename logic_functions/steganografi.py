@@ -6,7 +6,7 @@ def genData(data):
         newd.append(format(ord(i), '08b'))
     return newd
 
-# Modify pixels according to the 8-bit binary data
+# Modifikasi pixel dalam gambar
 def modPix(pix, data):
     datalist = genData(data)
     lendata = len(datalist)
@@ -38,7 +38,7 @@ def modPix(pix, data):
         yield pix[3:6]
         yield pix[6:9]
 
-# Encode the data into the image
+#enkrpsi pesan ke dalam gambar
 def embed_msg(image_data, output_image_path, message):
     img = Image.open(image_data)
     newimg = img.copy()
@@ -55,7 +55,7 @@ def embed_msg(image_data, output_image_path, message):
     newimg.save(output_image_path)
     return output_image_path
 
-# Decode the hidden data from the image
+#Dekripsi pesan dari gambar
 def extract_msg(input_image_path):
     img = Image.open(input_image_path)
     imgdata = iter(img.getdata())
@@ -70,4 +70,3 @@ def extract_msg(input_image_path):
         data += chr(int(binstr, 2))
         if pixels[-1] % 2 != 0:
             return data.rstrip('###')
-
